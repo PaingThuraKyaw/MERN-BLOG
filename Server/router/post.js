@@ -19,7 +19,6 @@ postRouter.post(
   [
     body("title").notEmpty().withMessage("title is required"),
     body("description").notEmpty().withMessage("description is required"),
-    // body("file").notEmpty().withMessage("file is required"),
   ],
   CreatePost
 );

@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const Post = require("../models/post");
+const { unLink } = require("../util/unLink");
 exports.getPost = (req, res) => {
   Post.find()
     .sort({ createdAt: 1 })
@@ -16,18 +17,19 @@ exports.getPost = (req, res) => {
 };
 
 exports.CreatePost = (req, res, next) => {
-  const { title, description, id } = req.body;
+  const { title, description, id } = req.body; // Correctly extracts title, description, and id
+
   const file = req.file;
-  console.log(req.file);
-  console.log(req.body);
+
   const errors = validationResult(req);
-  console.log(errors);
-  if (!errors.isEmpty()) {
+
+  if (!errors.isEmpty() && !req.file) {
     return res.status(400).json({
       message: "Validation failed",
       errorMessage: errors.array(),
     });
   }
+
   Post.create({
     title,
     description,
@@ -41,7 +43,7 @@ exports.CreatePost = (req, res, next) => {
     })
     .catch((err) => {
       res.status(404).json({
-        message: "Invaild Post",
+        message: "Invalid Post",
       });
     });
 };
@@ -96,6 +98,7 @@ exports.oldPost = (req, res) => {
 
 exports.NewPost = async (req, res) => {
   const { _id, title, description } = req.body;
+  const file = req.file;
   try {
     const post = await Post.findById(_id);
     if (!post) {
@@ -105,6 +108,12 @@ exports.NewPost = async (req, res) => {
     }
     post.title = title;
     post.description = description;
+    if (file) {
+      if (post.file) {
+        unLink(post.file);
+      }
+      post.file = `upload/${file.filename}`;
+    }
     await post.save();
     return res.status(200).json({
       message: "Post updated",

@@ -8,9 +8,10 @@ require("dotenv").config();
 const multer = require("multer");
 const UserRoute = require("./router/user");
 const path = require("path");
+const bodyParser = require("body-parser");
 //Json
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 //cors
 app.use(cors());
@@ -41,7 +42,12 @@ const fileConfig = (req, file, cb) => {
 };
 
 //multer fn
-app.use(multer({ storage: storageConfig }).single("file"));
+
+app.use("/upload", express.static(path.join(__dirname, "upload")));
+
+app.use(
+  multer({ storage: storageConfig, fileFilter: fileConfig }).single("file")
+);
 
 //route
 app.use(postRouter);
