@@ -99,8 +99,10 @@ exports.oldPost = (req, res) => {
 exports.NewPost = async (req, res) => {
   const { _id, title, description } = req.body;
   const file = req.file;
+  console.log(_id);
   try {
     const post = await Post.findById(_id);
+    console.log(post);
     if (!post) {
       return res.status(404).json({
         message: "Post not found",
