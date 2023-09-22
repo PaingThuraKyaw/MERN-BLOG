@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import Loading from "../../Loader/Loading";
 const EditPost: React.FC = () => {
   const validationSchema = yup.object().shape({
-    _id: yup.string().notRequired(),
+    // _id: yup.string().notRequired(),
     title: yup.string().required("Title is required"),
     description: yup.string().required("Description is required"),
     file: yup.mixed().test("required", "It's freaking required", (file) => {

@@ -20,7 +20,7 @@ export interface FormDataProp {
 }
 
 export interface FormUpdateData {
-  _id : string;
+  _id? : string;
   title: string;
   description: string;
   // file: File | null;
