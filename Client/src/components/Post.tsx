@@ -26,7 +26,7 @@ const Post = () => {
       </Link>
       <div className=" grid grid-cols-12 gap-10 mt-5">
         {data &&
-          data.map((post: postProp) => (
+          data.post.map((post: postProp) => (
             <div
               key={post._id}
               className=" col-span-12 md:col-span-5   lg:col-span-4"

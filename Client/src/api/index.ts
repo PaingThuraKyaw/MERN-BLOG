@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { FormDataProp, FormUpdateData, postProp } from "../type";
+import { FormDataProp, FormUpdateData } from "../type";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const post = async (): Promise<postProp[]> => {
-  const { data } = await axios.get(`${BASE_URL}/post`);
-  return data.post;
+const post = async () => {
+  const { data } = await axios.get(`${BASE_URL}/post?page=1`);
+  return data;
 };
 
 export const useGetPost = () => {

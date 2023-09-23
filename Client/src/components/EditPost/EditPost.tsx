@@ -5,11 +5,12 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FileProvider from "./FileProvider";
 import { useGetValue, useUpdatePost } from "../../api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../../Loader/Loading";
+import { FaSpinner } from "react-icons/fa";
 const EditPost: React.FC = () => {
   const validationSchema = yup.object().shape({
-    // _id: yup.string().notRequired(),
+    _id: yup.string().required("Id is required"),
     title: yup.string().required("Title is required"),
     description: yup.string().required("Description is required"),
     file: yup.mixed().test("required", "It's freaking required", (file) => {
@@ -25,7 +26,7 @@ const EditPost: React.FC = () => {
   const { data, isLoading } = useGetValue(id?.toString() || " ");
   //call updatefn
   const updateFn = useUpdatePost();
-
+  const navigate = useNavigate();
   //react-hook-form
   const {
     handleSubmit,
@@ -38,7 +39,13 @@ const EditPost: React.FC = () => {
 
   //form fn
   const onSubmit: SubmitHandler<FormUpdateData> = (value) => {
-    updateFn.mutate(value);
+    updateFn.mutate(value, {
+      onSuccess: (data) => {
+        if (data) {
+          navigate("/");
+        }
+      },
+    });
   };
 
   if (isLoading) {
@@ -104,8 +111,14 @@ const EditPost: React.FC = () => {
           />
 
           <div>
-            <button className=" w-full bg-cyan-500 shadow-inner active:bg-cyan-600 active:scale-95  transition-all duration-300 shadow-cyan-200 py-2 text-white">
-              Edit Post
+            <button
+              className={` w-full flex items-center justify-center  bg-cyan-500 shadow-inner active:bg-cyan-600 active:scale-95  transition-all duration-300 shadow-cyan-200 py-2 text-white`}
+            >
+              {updateFn.isSuccess && <FaSpinner className=" animate-spin" />}{" "}
+              <span className={`${updateFn.isSuccess && "mr-7 pl-4"}`}>
+                {" "}
+                Edit Post
+              </span>
             </button>
           </div>
         </form>

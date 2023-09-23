@@ -2,14 +2,29 @@ const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 const { unLink } = require("../util/unLink");
 exports.getPost = (req, res) => {
+  const currentPage = req.query.page || 1;
+  const perPage = 6;
+  let totalPost;
+  let totalPage;
+  // 12 /6 
   Post.find()
-    .sort({ createdAt: 1 })
+    .countDocuments()
+    .then((post) => {
+      totalPost = post;
+      totalPage = Math.ceil(totalPost / perPage)
+      return Post.find()
+        .sort({ createdAt: 1 })
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage);
+    })
     .then((post) => {
       return res.status(200).json({
         post,
+        totalPost,
+        totalPage
       });
     })
-    .catch((err) => {
+    .catch(() => {
       return res.status(404).json({
         message: "Something went wrong",
       });
@@ -65,7 +80,10 @@ exports.postDetail = (req, res, next) => {
 exports.postDelete = (req, res) => {
   const { id } = req.params;
   Post.findByIdAndDelete(id)
-    .then(() => {
+    .then((result) => {
+      if (result.file) {
+        unLink(result.file);
+      }
       res.status(204).json({
         message: "Delete Post",
       });
@@ -102,7 +120,6 @@ exports.NewPost = async (req, res) => {
   console.log(_id);
   try {
     const post = await Post.findById(_id);
-    console.log(post);
     if (!post) {
       return res.status(404).json({
         message: "Post not found",
