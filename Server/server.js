@@ -51,7 +51,7 @@ app.use(
 
 //route
 app.use(postRouter);
-app.use("/admin", UserRoute);
+app.use(UserRoute);
 
 //mongodb && mongoose
 mongoose.connect(process.env.MONGODB_URL).then((_) => {
