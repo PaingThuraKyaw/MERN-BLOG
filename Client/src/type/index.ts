@@ -19,7 +19,8 @@ export interface postProp {
   file: File;
   createAt: string;
   updateAt: string;
-}[]
+}
+[];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyPresentValue = any;
@@ -36,4 +37,14 @@ export interface FormUpdateData {
   title: string;
   description: string;
   file?: AnyPresentValue | undefined;
+}
+
+export interface registerProp {
+  username: string;
+  email: string;
+  password: string;
+}
+export interface loginProp {
+  email: string;
+  password: string;
 }

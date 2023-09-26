@@ -3,6 +3,8 @@ import Main from "./layout/Main";
 import Post from "./components/Post";
 import CreatePost from "./components/createPost/CreatePost";
 import EditPost from "./components/EditPost/EditPost";
+import Login from "./auth/Login";
+import Register from "./auth/Register";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -23,6 +25,14 @@ const App = () => {
           element: <EditPost />,
         },
       ],
+    },
+    {
+      path:  "/login",
+      element: <Login />,
+    },
+    {
+      path: "/register",
+      element: <Register />,
     },
   ]);
 

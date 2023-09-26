@@ -7,6 +7,7 @@ const {
   oldPost,
   NewPost,
 } = require("../controllers/controllerPost");
+const isAuth = require("../middleware/isAuth");
 
 const postRouter = require("express").Router();
 
